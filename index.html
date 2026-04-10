@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, user-scalable=yes">
+    <title>TraderBOT · Admin Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ===== TODO O SEU CSS ORIGINAL AQUI (mantido intacto) ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-gradient: linear-gradient(135deg, #0a0a0f 0%, #1a1207 30%, #0d0d1a 60%, #1a0f07 100%);
+            --accent: #d4a24e;
+            --accent-light: #f0c67a;
+            --accent-glow: rgba(212,162,78,0.3);
+            --text-primary: rgba(255,255,255,0.95);
+            --text-secondary: rgba(255,255,255,0.75);
+            --text-muted: rgba(255,255,255,0.5);
+            --border-light: rgba(212,162,78,0.2);
+            --bg-translucent: rgba(212,162,78,0.08);
+            --bg-translucent-hover: rgba(212,162,78,0.14);
+            --glass: rgba(20,20,30,0.6);
+            --glass-border: rgba(212,162,78,0.25);
+            --success: #34d399;
+            --danger: #f87171;
+            --warning: #fbbf24;
+            --info: #60a5fa;
+            --G: #34d399; --Gd: #2ecc71; --Gx: rgba(52,211,153,0.08);
+            --A: #fbbf24; --Ad: #f59e0b; --Ax: rgba(251,191,36,0.08);
+            --R: #f87171; --Rx: rgba(248,113,113,0.08);
+            --B: #60a5fa; --Bx: rgba(96,165,250,0.08);
+            --P: #c084fc; --Px: rgba(192,132,252,0.08);
+            --T: #e2e8f0; --T2: #94a3b8; --T3: #64748b; --T4: #334155;
+            --mono: 'Open Sans', monospace;
+            --sans: 'Open Sans', sans-serif;
+            --r: 8px; --r2: 12px; --r3: 16px;
+        }
+        body { font-family: 'Open Sans', sans-serif; background: var(--bg-gradient); background-attachment: fixed; color: var(--text-primary); line-height: 1.6; min-height: 100vh; font-weight: 300; overflow-x: hidden; }
+        .text-accent { color: var(--accent); }
+        .bg-glass { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); }
+        /* LOGO SCREEN */
+        .logo-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-gradient); display: flex; justify-content: center; align-items: center; z-index: 10000; transition: opacity 1s ease-out; }
+        .logo-container { text-align: center; animation: logoPulse 2s infinite ease-in-out; }
+        .logo-img { max-width: 180px; border-radius: 16px; background: var(--bg-translucent); padding: 15px; border: 1px solid var(--border-light); box-shadow: 0 8px 16px rgba(0,0,0,0.3); }
+        @keyframes logoPulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } 100% { transform: scale(1); opacity: 1; } }
+        /* SPLASH SCREEN */
+        .splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-gradient); background-attachment: fixed; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.8s ease-out; opacity: 0; }
+        .splash-screen::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, var(--accent), transparent); animation: gradientFlow 3s linear infinite; }
+        @keyframes gradientFlow { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .splash-content { text-align: center; width: 90%; max-width: 400px; animation: fadeInUp 0.5s ease; position: relative; z-index: 2; }
+        .splash-logo { position: relative; margin-bottom: 40px; }
+        .logo-glow { width: 150px; height: 150px; background: radial-gradient(circle, var(--accent) 0%, transparent 70%); filter: blur(30px); opacity: 0.2; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: glowPulse 3s infinite; }
+        @keyframes glowPulse { 0%, 100% { opacity: 0.2; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.4; transform: translate(-50%, -50%) scale(1.2); } }
+        .logo-symbol { font-size: 60px; font-weight: 900; color: var(--accent); position: relative; z-index: 2; text-shadow: 0 0 30px rgba(212,162,78,0.3); }
+        .logo-text h1 { font-size: 32px; font-weight: 400; letter-spacing: 2px; color: white; margin-bottom: 12px; text-transform: uppercase; }
+        .logo-text p { color: var(--text-secondary); font-size: 14px; letter-spacing: 4px; text-transform: uppercase; }
+        .loader { width: 70px; height: 70px; margin: 30px auto; position: relative; }
+        .loader-inner { position: absolute; inset: 0; border: 3px solid transparent; border-top-color: var(--accent); border-right-color: var(--text-secondary); border-radius: 50%; animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; }
+        .loader-inner:nth-child(2) { border-top-color: var(--text-secondary); border-right-color: var(--accent); animation: spin 2s reverse infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading-text { font-size: 14px; color: var(--text-secondary); margin-top: 20px; min-height: 20px; font-weight: 400; }
+        .dots::after { content: ''; animation: dots 1.5s steps(4, end) infinite; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
+        /* LOGIN */
+        .login-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.6s ease; padding: 20px; z-index: 100; pointer-events: none; }
+        .login-wrapper.active { opacity: 1; pointer-events: all; }
+        .login-container { background: var(--bg-translucent); backdrop-filter: blur(20px) saturate(1.2); border: 1px solid var(--border-light); border-radius: 10px; padding: 12px; width: 100%; max-width: 400px; box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 80px rgba(212,162,78,0.08); transform: translateY(20px); transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); position: relative; overflow: hidden; }
+        .login-wrapper.active .login-container { transform: translateY(0); }
+        .login-container::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--accent); }
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-icon { width: 70px; height: 70px; background: var(--bg-translucent); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 30px; color: var(--accent); border: 1px solid var(--border-light); }
+        .login-header h2 { font-size: 1.8rem; margin-bottom: 0.5rem; color: white; font-weight: 400; text-transform: uppercase; letter-spacing: 1px; }
+        .login-header p { color: var(--text-secondary); font-size: 0.9rem; }
+        .message { padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; text-align: center; font-size: 14px; font-weight: 400; display: none; border: 1px solid; }
+        .message.error { background: rgba(231, 76, 60, 0.1); color: var(--danger); border-color: rgba(231, 76, 60, 0.3); display: block; }
+        .message.success { background: rgba(46, 204, 113, 0.1); color: var(--success); border-color: rgba(46, 204, 113, 0.3); display: block; }
+        .message.loading { background: rgba(243, 156, 18, 0.1); color: var(--warning); border-color: rgba(243, 156, 18, 0.3); display: block; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; color: var(--text-secondary); font-size: 14px; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-field { position: relative; }
+        .input-field input { width: 100%; padding: 12px 16px 12px 45px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); border-radius: 6px; color: white; font-size: 14px; transition: all 0.2s ease; }
+        .input-field input:hover { border-color: var(--text-secondary); }
+        .input-field input:focus { outline: none; border-color: var(--accent); }
+        .input-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 16px; }
+        .submit-btn { width: 100%; padding: 12px; background: transparent; border: 2px solid var(--accent); border-radius: 30px; color: var(--accent); font-weight: 600; font-size: 14px; letter-spacing: 0.5px; cursor: pointer; text-transform: uppercase; transition: all 0.2s ease; }
+        .submit-btn:hover { background: var(--accent); color: #000; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(212,162,78,0.3); }
+        .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+        /* DASHBOARD */
+        .dashboard-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; padding: 0; opacity: 0; transition: opacity 0.6s ease; pointer-events: none; z-index: 50; }
+        .dashboard-wrapper.active { opacity: 1; pointer-events: all; }
+        .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 200; height: 54px; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-light); display: flex; align-items: center; padding: 0 14px; gap: 10px; }
+        .logo-mark { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), var(--accent-light)); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 13px; font-weight: 700; color: #000; flex-shrink: 0; }
+        .logo-text { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--text-primary); letter-spacing: .05em; flex: 1; display: flex; flex-direction: column; line-height: 1.2; }
+        .logo-text span { font-size: 9px; font-weight: 400; color: var(--text-muted); letter-spacing: .1em; text-transform: uppercase; }
+        .top-pills { display: flex; gap: 6px; align-items: center; }
+        .spill { display: flex; align-items: center; gap: 5px; font-family: var(--mono); font-size: 10px; padding: 4px 8px; border-radius: 20px; border: 1px solid var(--border-light); background: var(--bg-translucent); color: var(--text-muted); cursor: default; }
+        .spill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--T4); transition: all .3s; }
+        .spill.on { border-color: rgba(52,211,153,0.4); color: var(--success); }
+        .spill.on .dot { background: var(--success); box-shadow: 0 0 6px var(--success); }
+        .spill.off { border-color: rgba(248,113,113,0.4); color: var(--danger); }
+        .spill.off .dot { background: var(--danger); }
+        .spill.wait { border-color: rgba(251,191,36,0.4); color: var(--warning); }
+        .spill.wait .dot { background: var(--warning); animation: blink 1s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+        .ham { background: none; border: 1px solid var(--border-light); width: 36px; height: 36px; border-radius: var(--r); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; transition: all 0.2s; flex-shrink: 0; }
+        .ham:hover { border-color: var(--accent); }
+        .ham span { display: block; width: 16px; height: 1.5px; background: var(--text-secondary); transition: all .25s; }
+        .ham.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+        .ham.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .ham.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+        .overlay { position: fixed; inset: 54px 0 0 0; z-index: 198; background: rgba(0,0,0,0.6); opacity: 0; pointer-events: none; transition: opacity .3s; }
+        .overlay.show { opacity: 1; pointer-events: all; }
+        .drawer { position: fixed; top: 54px; right: 0; bottom: 0; z-index: 199; width: min(280px, 90vw); background: rgba(10,10,15,0.95); backdrop-filter: blur(16px); border-left: 1px solid var(--border-light); transform: translateX(100%); transition: transform .3s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; overflow-y: auto; }
+        .drawer.show { transform: translateX(0); }
+        .dsec { padding: 14px; border-bottom: 1px solid var(--border-light); }
+        .dlabel { font-family: var(--mono); font-size: 9px; color: var(--text-muted); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 8px; }
+        .ditem { display: flex; align-items: center; gap: 9px; padding: 9px 10px; border-radius: var(--r); cursor: pointer; font-size: 12px; font-weight: 500; color: var(--text-secondary); transition: all .12s; border: 1px solid transparent; }
+        .ditem:hover { background: var(--bg-translucent); color: var(--text-primary); border-color: var(--border-light); }
+        .ditem.active { background: var(--bg-translucent); color: var(--accent); border-color: rgba(212,162,78,0.3); }
+        .ditem .ico { font-size: 14px; width: 18px; text-align: center; }
+        .dbadge { margin-left: auto; font-family: var(--mono); font-size: 9px; padding: 2px 6px; border-radius: 20px; background: rgba(0,0,0,0.3); color: var(--text-muted); }
+        .main { padding-top: 54px; min-height: 100vh; padding: 54px 14px 14px; }
+        .page { display: none; animation: fadeIn 0.2s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+        .ph { font-size: 18px; font-weight: 700; margin-bottom: 2px; }
+        .ps { font-family: var(--mono); font-size: 10px; color: var(--text-muted); margin-bottom: 16px; }
+        .card { background: var(--bg-translucent); backdrop-filter: blur(8px); border: 1px solid var(--border-light); border-radius: var(--r2); padding: 14px; margin-bottom: 10px; }
+        .card-h { font-family: var(--mono); font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+        .card-h .act { font-family: var(--mono); font-size: 10px; color: var(--text-muted); background: none; border: 1px solid var(--border-light); border-radius: 4px; padding: 3px 8px; cursor: pointer; }
+        .card-h .act:hover { color: var(--accent); border-color: var(--accent); }
+        .mgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 10px; }
+        @media (min-width: 560px) { .mgrid { grid-template-columns: repeat(4,1fr); } }
+        .m { background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); border-radius: var(--r); padding: 12px 10px; }
+        .ml { font-family: var(--mono); font-size: 9px; color: var(--text-muted); margin-bottom: 5px; }
+        .mv { font-family: var(--mono); font-size: 20px; font-weight: 600; line-height: 1; }
+        .ms { font-family: var(--mono); font-size: 9px; color: var(--text-muted); margin-top: 3px; }
+        .g { color: var(--success); } .a { color: var(--warning); } .r { color: var(--danger); } .b { color: var(--info); } .p { color: var(--accent); }
+        .badge { display: inline-flex; align-items: center; font-family: var(--mono); font-size: 10px; font-weight: 500; padding: 3px 7px; border-radius: 4px; }
+        .badge.g { background: rgba(52,211,153,0.1); color: var(--success); border: 1px solid rgba(52,211,153,0.3); }
+        .badge.r { background: rgba(248,113,113,0.1); color: var(--danger); border: 1px solid rgba(248,113,113,0.3); }
+        .badge.a { background: rgba(251,191,36,0.1); color: var(--warning); border: 1px solid rgba(251,191,36,0.3); }
+        .badge.b { background: rgba(96,165,250,0.1); color: var(--info); border: 1px solid rgba(96,165,250,0.3); }
+        .badge.x { background: rgba(255,255,255,0.05); color: var(--text-secondary); border: 1px solid var(--border-light); }
+        .field { margin-bottom: 12px; }
+        .field label { display: block; font-family: var(--mono); font-size: 9px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; }
+        .field input, .field select, .field textarea { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); border-radius: var(--r); padding: 9px 11px; color: var(--text-primary); font-family: var(--mono); font-size: 12px; outline: none; }
+        .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--accent); }
+        .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-family: var(--sans); font-size: 12px; font-weight: 600; padding: 9px 16px; border-radius: 30px; border: none; cursor: pointer; transition: all 0.2s; }
+        .btn-g { background: var(--success); color: #000; }
+        .btn-g:hover { filter: brightness(1.05); }
+        .btn-o { background: transparent; border: 1px solid var(--border-light); color: var(--text-primary); }
+        .btn-o:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-r { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: var(--danger); }
+        .btn-a { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); color: var(--warning); }
+        .btn-p { background: rgba(212,162,78,0.1); border: 1px solid rgba(212,162,78,0.3); color: var(--accent); }
+        .btn-full { width: 100%; }
+        .btn-sm { padding: 5px 10px; font-size: 11px; }
+        .term { background: rgba(0,0,0,0.5); border: 1px solid var(--border-light); border-radius: var(--r); padding: 10px 12px; font-family: var(--mono); font-size: 10px; line-height: 1.75; max-height: 220px; overflow-y: auto; color: var(--text-secondary); }
+        .tl { display: flex; gap: 8px; align-items: flex-start; }
+        .ts { color: var(--text-muted); white-space: nowrap; }
+        .tok, .tin { color: var(--success); }
+        .twn { color: var(--warning); }
+        .ter { color: var(--danger); }
+        .tbox { background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); border-radius: var(--r); padding: 10px 11px; padding-right: 62px; font-family: var(--mono); font-size: 10px; color: var(--accent); word-break: break-all; position: relative; }
+        .tcopy { position: absolute; top: 7px; right: 7px; background: rgba(0,0,0,0.5); border: 1px solid var(--border-light); color: var(--text-secondary); font-size: 9px; padding: 3px 7px; border-radius: 4px; cursor: pointer; }
+        .tcopy:hover { border-color: var(--accent); color: var(--accent); }
+        .pills { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+        .pill { font-family: var(--mono); font-size: 10px; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border-light); color: var(--text-secondary); cursor: pointer; }
+        .pill.on { border-color: var(--accent); color: var(--accent); background: var(--bg-translucent); }
+        .utbl { width: 100%; border-collapse: collapse; }
+        .utbl th, .utbl td { padding: 8px; text-align: left; border-bottom: 1px solid var(--border-light); font-size: 10px; font-family: var(--mono); }
+        .utbl th { color: var(--text-muted); text-transform: uppercase; }
+        .nh { display: flex; flex-direction: column; gap: 6px; }
+        .ni { display: flex; gap: 9px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); border-radius: var(--r); padding: 9px 11px; }
+        .clock { position: fixed; top: 16px; right: 16px; background: rgba(0,0,0,0.5); backdrop-filter: blur(12px); border: 1px solid var(--border-light); border-radius: 8px; padding: 6px 12px; color: var(--accent); font-size: 13px; font-weight: 600; letter-spacing: 1px; z-index: 200; font-family: var(--mono); }
+        .empty { text-align: center; padding: 28px 14px; color: var(--text-muted); }
+        .spin { display: inline-block; animation: spinAnim 0.8s linear infinite; }
+        @keyframes spinAnim { to { transform: rotate(360deg); } }
+        .resp { background: rgba(0,0,0,0.3); border: 1px solid var(--border-light); border-radius: var(--r); padding: 10px; font-family: var(--mono); font-size: 10px; max-height: 260px; overflow-y: auto; white-space: pre-wrap; }
+        @media (max-width: 400px) { .main { padding: 54px 8px 8px; } .ph { font-size: 16px; } }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    </style>
+</head>
+<body>
+
+<!-- Tela do Logo (8 segundos) -->
+<div id="logo-screen" class="logo-screen">
+    <div class="logo-container">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23d4a24e'/%3E%3Ctext x='50' y='68' font-size='48' text-anchor='middle' fill='%23000' font-weight='bold'%3ETB%3C/text%3E%3C/svg%3E" alt="Logo Trader BOT" class="logo-img">
+    </div>
+</div>
+
+<!-- Splash Screen -->
+<div id="splash-screen" class="splash-screen">
+    <div class="splash-content">
+        <div class="splash-logo">
+            <div class="logo-glow"></div>
+            <div class="logo-symbol">₿</div>
+        </div>
+        <div class="logo-text">
+            <h1>TRADER BOT</h1>
+            <p>VALIDAÇÃO DE ACESSO</p>
+        </div>
+        <div class="loader">
+            <div class="loader-inner"></div>
+            <div class="loader-inner"></div>
+        </div>
+        <div class="loading-text">Carregando sistema<span class="dots"></span></div>
+    </div>
+</div>
+
+<!-- Tela de Login -->
+<div id="login-wrapper" class="login-wrapper">
+    <div class="login-container">
+        <div class="login-header">
+            <div class="login-icon"><i class="fas fa-lock"></i></div>
+            <h2>ACESSO RESTRITO</h2>
+            <p>Insira seu token de validação</p>
+        </div>
+        <div id="login-message" class="message"></div>
+        <form id="validationForm">
+            <div class="input-group">
+                <label for="tokenCode">Código de Acesso</label>
+                <div class="input-field">
+                    <input type="password" id="tokenCode" placeholder="Token de administrador" required>
+                    <div class="input-icon"><i class="fas fa-key"></i></div>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn" id="submitBtn">VALIDAR ACESSO</button>
+        </form>
+        <div class="security-tips" style="margin-top:20px;padding:12px;background:rgba(0,0,0,0.2);border-radius:8px;">
+            <h4><i class="fas fa-shield-alt"></i> Segurança</h4>
+            <ul style="margin-left:20px;font-size:12px;">
+                <li>Token fornecido pelo administrador</li>
+                <li>Conexão criptografada</li>
+            </ul>
+        </div>
+        <div class="login-footer">© 2026 Trader BOT · Sistema Validado</div>
+    </div>
+</div>
+
+<!-- Dashboard Principal -->
+<div id="dashboard-wrapper" class="dashboard-wrapper">
+    <header class="topbar">
+        <div class="logo-mark">TB</div>
+        <div class="logo-text">TraderBOT Admin<span>Painel de Controlo</span></div>
+        <div class="top-pills"><div class="spill wait" id="hp"><div class="dot"></div><span id="htext">...</span></div></div>
+        <button class="ham" id="ham" onclick="toggleDrawer()"><span></span><span></span><span></span></button>
+    </header>
+    <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+    <nav class="drawer" id="drawer">
+        <div class="dsec"><div class="dlabel">Navegação</div>
+            <div class="ditem active" data-p="dash" onclick="go('dash')"><span class="ico">⬡</span>Dashboard <span class="dbadge">ao vivo</span></div>
+            <div class="ditem" data-p="users" onclick="go('users')"><span class="ico">◎</span>Utilizadores <span class="dbadge" id="dnav-users">0</span></div>
+            <div class="ditem" data-p="tokens" onclick="go('tokens')"><span class="ico">◈</span>Tokens</div>
+            <div class="ditem" data-p="notif" onclick="go('notif')"><span class="ico">◐</span>Notificações <span class="dbadge" id="dnav-notif">0</span></div>
+            <div class="ditem" data-p="analyze" onclick="go('analyze')"><span class="ico">◉</span>Análise Rápida</div>
+        </div>
+        <div class="dsec"><div class="dlabel">Servidor</div>
+            <div class="ditem" data-p="server" onclick="go('server')"><span class="ico">⬙</span>Controlo Server</div>
+            <div class="ditem" data-p="logs" onclick="go('logs')"><span class="ico">≡</span>Logs <span class="dbadge" id="dnav-logs">0</span></div>
+        </div>
+        <div class="dsec"><div class="dlabel">Sistema</div>
+            <div class="ditem" data-p="cfg" onclick="go('cfg')"><span class="ico">⊙</span>Configurações</div>
+        </div>
+        <div style="padding:12px;font-size:9px;color:var(--text-muted);border-top:1px solid var(--border-light)">
+            <div>URL: <span id="urldisp">—</span></div><div>Uptime: <span id="draw-uptime">—</span></div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <!-- Dashboard -->
+        <div class="page active" id="page-dash">
+            <div class="ph">Dashboard</div>
+            <div class="ps" id="dash-ts">Carregando…</div>
+            <div class="ticker" style="height:32px;overflow:hidden;background:rgba(0,0,0,0.3);border:1px solid var(--border-light);border-radius:var(--r);margin-bottom:10px;display:flex;align-items:center;padding:0 12px;"><div class="ticker-inner" id="ticker-txt" style="white-space:nowrap;animation:scroll 30s linear infinite;">◈ TRADER BOT ADMIN ◈ Aguardando dados…</div></div>
+            <div class="mgrid"><div class="m"><div class="ml">Servidor</div><div class="mv" id="dm-srv" style="color:var(--T3)">—</div><div class="ms">estado atual</div></div><div class="m"><div class="ml">Latência</div><div class="mv a" id="dm-lat">—</div><div class="ms">ms/resposta</div></div><div class="m"><div class="ml">Utilizadores</div><div class="mv b" id="dm-users">0</div><div class="ms">tokens gerados</div></div><div class="m"><div class="ml">Uptime Painel</div><div class="mv g" id="dm-up">—</div><div class="ms">monitorado</div></div></div>
+            <div class="card"><div class="card-h">Modos de Trading <button class="act" onclick="loadModes()">↺</button></div><div id="modes-out"><div class="empty">A carregar…</div></div></div>
+            <div class="card"><div class="card-h">Conexão Deriv (WebSocket) <button class="act" onclick="loadConn()">↺</button></div><div id="conn-out"><div class="empty">Token de sessão necessário</div></div></div>
+            <div class="card"><div class="card-h">Monitor em Tempo Real <button class="act" onclick="clearRtLog()">limpar</button></div><div class="term" id="rtlog"><div class="tl"><span class="ts">[init]</span><span class="tin">Painel iniciado.</span></div></div><div class="sbar" style="display:flex;gap:10px;margin-top:8px;background:rgba(0,0,0,0.3);padding:8px 12px;border-radius:var(--r);"><div>Checks <strong id="sc-checks">0</strong></div><div>OK <strong class="g" id="sc-ok">0</strong></div><div>Erros <strong class="r" id="sc-err">0</strong></div><div>Intervalo <strong class="a" id="sc-int">Manual</strong></div></div></div>
+        </div>
+
+        <!-- Utilizadores -->
+        <div class="page" id="page-users">
+            <div class="ph">Utilizadores</div><div class="ps">Tokens ativos e aplicações conectadas</div>
+            <div class="mgrid"><div class="m"><div class="ml">Total Tokens</div><div class="mv b" id="um-total">0</div></div><div class="m"><div class="ml">Activos</div><div class="mv g" id="um-active">0</div></div><div class="m"><div class="ml">Expirados</div><div class="mv r" id="um-exp">0</div></div><div class="m"><div class="ml">Consultas</div><div class="mv a" id="um-sess">0</div></div></div>
+            <div class="card"><div class="card-h">Tokens Registados <div style="display:flex;gap:6px"><button class="act" onclick="renderUsers()">↺</button><button class="act" onclick="go('tokens')">+ Novo</button></div></div><div style="overflow-x:auto"><table class="utbl"><thead><tr><th>User ID</th><th>Período</th><th>Expira</th><th>Estado</th><th>Ações</th></tr></thead><tbody id="users-tbody"><tr><td colspan="5" style="text-align:center">Nenhum token</td></tr></tbody></table></div></div>
+            <div class="card"><div class="card-h">Validar Token</div><div class="field"><label>Token</label><textarea id="val-tok" placeholder="Cole o token…" style="min-height:60px"></textarea></div><button class="btn btn-o btn-full" onclick="valToken()">◎ Validar</button><div id="val-res" style="margin-top:10px"></div></div>
+        </div>
+
+        <!-- Tokens -->
+        <div class="page" id="page-tokens">
+            <div class="ph">Tokens</div><div class="ps">Gerir tokens de acesso</div>
+            <div class="card"><div class="card-h">Gerar Token</div><div class="field"><label>Chave Admin</label><input type="password" id="gk" placeholder="ADMIN_SECRET"></div><div class="g2" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div class="field"><label>Validade</label><select id="gp"><option value="7">7 dias</option><option value="30" selected>30 dias</option><option value="90">90 dias</option><option value="180">180 dias</option><option value="365">365 dias</option></select></div><div class="field"><label>Identificador</label><input type="text" id="gid" placeholder="cliente"></div></div><button class="btn btn-g btn-full" onclick="genToken()" id="gbtn">◈ Gerar Token</button><div id="gen-res" style="margin-top:10px"></div></div>
+            <div class="card"><div class="card-h">Lista de Tokens <button class="act" onclick="renderTokensList()">↺</button></div><div id="tokens-list"><div class="empty">Nenhum token gerado</div></div></div>
+        </div>
+
+        <!-- Notificações -->
+        <div class="page" id="page-notif">
+            <div class="ph">Notificações</div><div class="ps">Enviar alertas</div>
+            <div class="card"><div class="card-h">Compor Notificação</div>
+                <div class="field"><label>Tipo</label><div class="pills" id="ntype"><div class="pill on" data-v="info">ℹ Info</div><div class="pill" data-v="alerta">⚠ Alerta</div><div class="pill" data-v="sinal">◈ Sinal</div><div class="pill" data-v="manutencao">⬙ Manutenção</div><div class="pill" data-v="critico">🚨 Crítico</div></div></div>
+                <div class="field"><label>Destino</label><div class="pills" id="ndest"><div class="pill on" data-v="todos">Todos</div><div class="pill" data-v="sniper">SNIPER</div><div class="pill" data-v="cacador">CAÇADOR</div><div class="pill" data-v="pescador">PESCADOR</div><div class="pill" data-v="premium">Premium</div></div></div>
+                <div class="field"><label>Título</label><input type="text" id="ntitle"></div>
+                <div class="field"><label>Mensagem</label><textarea id="nbody"></textarea></div>
+                <div class="field"><label>Prioridade</label><div class="pills" id="nprio"><div class="pill on" data-v="normal">Normal</div><div class="pill" data-v="alta">Alta</div><div class="pill" data-v="urgente">Urgente</div></div></div>
+                <button class="btn btn-a btn-full" onclick="sendNotif()">◐ Enviar</button><div id="notif-send-res" style="margin-top:8px"></div>
+            </div>
+            <div class="card"><div class="card-h">Histórico <div><button class="act" onclick="renderNotifs()">↺</button><button class="act" onclick="clearNotifs()">✕ limpar</button></div></div><div class="nh" id="notif-hist"><div class="empty">Nenhuma notificação</div></div></div>
+        </div>
+
+        <!-- Análise Rápida -->
+        <div class="page" id="page-analyze">
+            <div class="ph">Análise Rápida</div><div class="ps">Testar endpoint /api/analyze</div>
+            <div class="card"><div class="card-h">Parâmetros</div><div class="field"><label>Token Sessão</label><input type="password" id="an-tok"></div><div class="g2"><div class="field"><label>Símbolo</label><select id="an-sym"><option value="R_10">Volatility 10</option><option value="R_25">Volatility 25</option><option value="R_50">Volatility 50</option><option value="R_75">Volatility 75</option><option value="R_100">Volatility 100</option><option value="frxEURUSD">EUR/USD</option></select></div><div class="field"><label>Modo</label><select id="an-mode"><option value="SNIPER">SNIPER</option><option value="CAÇADOR">CAÇADOR</option><option value="PESCADOR">PESCADOR</option></select></div></div><button class="btn btn-g btn-full" onclick="doAnalyze()" id="an-btn">◉ Executar Análise</button></div>
+            <div class="card" id="an-res-card" style="display:none"><div class="card-h">Resultado</div><div id="an-res"></div></div>
+        </div>
+
+        <!-- Server -->
+        <div class="page" id="page-server">
+            <div class="ph">Controlo do Servidor</div><div class="ps" id="srv-url-disp">—</div>
+            <div class="mgrid"><div class="m"><div class="ml">Health</div><div class="mv" id="sm-health">—</div></div><div class="m"><div class="ml">Lat. Média</div><div class="mv a" id="sm-avg">—</div></div><div class="m"><div class="ml">Checks</div><div class="mv b" id="sm-checks">0</div></div><div class="m"><div class="ml">Erros Seg.</div><div class="mv r" id="sm-errs">0</div></div></div>
+            <div class="card"><div class="card-h">Ações Rápidas</div><div class="g2"><button class="btn btn-o" onclick="doHealth()">⬡ Health Check</button><button class="btn btn-o" onclick="loadModes()">◈ Modos</button><button class="btn btn-o" onclick="pingAll()">◎ Ping Completo</button><button class="btn btn-a" onclick="forceRefresh()">↺ Forçar Refresh</button></div></div>
+            <div class="card"><div class="card-h">Reiniciar Render</div><button class="btn btn-p btn-full" onclick="restartRenderService()" id="renderRestartBtn">⬙ Reiniciar Serviço</button><div id="renderRestartRes" style="margin-top:10px"></div></div>
+            <div class="card"><div class="card-h">Respostas</div><div class="resp" id="srv-resp">Sem dados</div></div>
+        </div>
+
+        <!-- Logs -->
+        <div class="page" id="page-logs">
+            <div class="ph">Logs</div><div class="ps">Registo completo</div>
+            <div class="card"><div class="card-h">Console <div><button class="act" onclick="exportLogs()">↓ exportar</button><button class="act" onclick="clearLogs()">✕ limpar</button></div></div><div class="pills" id="log-filter"><div class="pill on" data-v="all">Todos</div><div class="pill" data-v="tok">✓ OK</div><div class="pill" data-v="twn">⚠ Aviso</div><div class="pill" data-v="ter">✕ Erro</div><div class="pill" data-v="tin">ℹ Info</div></div><div class="term" id="main-log"><div class="tl"><span class="ts">[init]</span><span class="tin">Painel iniciado.</span></div></div></div>
+        </div>
+
+        <!-- Configurações -->
+        <div class="page" id="page-cfg">
+            <div class="ph">Configurações</div><div class="ps">URL do servidor, credenciais</div>
+            <div class="card"><div class="card-h">Servidor</div><div class="field"><label>URL Base</label><input type="text" id="cfg-url" value="https://deriv-trading-backend-w2vx.onrender.com"></div><button class="btn btn-g" onclick="saveURL()">✓ Guardar URL</button></div>
+            <div class="card"><div class="card-h">Autenticação</div><div class="field"><label>Chave Admin</label><input type="password" id="cfg-admin"></div><div class="field"><label>Token Sessão</label><input type="password" id="cfg-sess"></div><div style="display:flex;gap:8px"><button class="btn btn-g" onclick="saveCreds()">✓ Guardar</button><button class="btn btn-r" onclick="clearCreds()">✕ Limpar</button></div><div id="cfg-tok-info" style="margin-top:8px"></div></div>
+            <div class="card"><div class="card-h">Sobre</div><div>Painel: TraderBOT Admin v2.0</div><div>Tecnologia: Vercel Serverless + KV</div></div>
+        </div>
+    </main>
+    <div class="clock" id="liveClock"></div>
+</div>
+
+<script>
+    // ==================== CONFIGURAÇÃO GLOBAL ====================
+    let API = localStorage.getItem('api_url') || window.location.origin;
+    let ADMIN_KEY = localStorage.getItem('admin_key') || '';
+    let SESSION_TOK = localStorage.getItem('session_tok') || '';
+    let notifications = JSON.parse(localStorage.getItem('notifs') || '[]');
+    let allLogs = [{type:'tin',msg:'Painel iniciado',ts:new Date().toLocaleTimeString()}];
+    let checks = 0, oks = 0, errs = 0, consErrs = 0;
+    let latencies = [];
+    let startTs = Date.now();
+    let totalQueries = 0;
+
+    // ==================== FUNÇÕES AUXILIARES ====================
+    function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function showRes(id, cls, msg) { let el = document.getElementById(id); if(el) el.innerHTML = `<span class="badge ${cls}">${msg}</span>`; }
+    function addLog(type, msg) { let ts = new Date().toLocaleTimeString(); allLogs.unshift({type,msg,ts}); if(allLogs.length>300) allLogs.pop(); renderLogs(); document.getElementById('dnav-logs').textContent = allLogs.length; }
+    function addRtLog(type, msg) { let el = document.getElementById('rtlog'); if(!el) return; let ts = new Date().toLocaleTimeString(); let d = document.createElement('div'); d.className='tl'; d.innerHTML=`<span class="ts">[${ts}]</span><span class="${type}">${esc(msg)}</span>`; el.insertBefore(d,el.firstChild); let lines = el.querySelectorAll('.tl'); if(lines.length>60) lines[lines.length-1].remove(); }
+    function renderLogs() { let el = document.getElementById('main-log'); if(!el) return; let f = getPill('log-filter')||'all'; let logs = f==='all'?allLogs:allLogs.filter(l=>l.type===f); el.innerHTML = logs.map(l=>`<div class="tl"><span class="ts">[${l.ts}]</span><span class="${l.type}">${esc(l.msg)}</span></div>`).join('')||'<div style="color:var(--text-muted)">Sem logs</div>'; }
+    function clearLogs() { allLogs = []; renderLogs(); document.getElementById('dnav-logs').textContent = 0; }
+    function clearRtLog() { let el = document.getElementById('rtlog'); if(el) el.innerHTML = '<div class="tl"><span class="ts">[clear]</span><span class="tin">Log limpo.</span></div>'; }
+    function exportLogs() { let txt = allLogs.map(l=>`[${l.ts}] [${l.type.toUpperCase()}] ${l.msg}`).join('\n'); let a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt])); a.download = `logs-${Date.now()}.txt`; a.click(); }
+    function copyTxt(txt, btn) { navigator.clipboard.writeText(txt); let o = btn.textContent; btn.textContent='✓'; setTimeout(()=>btn.textContent=o,1200); }
+    function setupPills(id, cb) { let el = document.getElementById(id); if(!el) return; el.querySelectorAll('.pill').forEach(p=>{ p.onclick = ()=>{ el.querySelectorAll('.pill').forEach(x=>x.classList.remove('on')); p.classList.add('on'); if(cb) cb(p.dataset.v); }; }); }
+    function getPill(id) { let p = document.querySelector(`#${id} .pill.on`); return p ? p.dataset.v : ''; }
+    function updateUptime() { let s = Math.floor((Date.now()-startTs)/1000); let h = Math.floor(s/3600), m = Math.floor((s%3600)/60); let txt = h>0?`${h}h${m.toString().padStart(2,'0')}m`:`${m}m`; document.getElementById('dm-up') && (document.getElementById('dm-up').textContent = txt); document.getElementById('draw-uptime') && (document.getElementById('draw-uptime').textContent = txt); }
+    function updateTicker() { let d = document.getElementById('dm-srv')?.textContent||'—'; let lat = document.getElementById('dm-lat')?.textContent||'—'; let txt = `◈ TRADER BOT ADMIN ◈ SERVER: ${d} ◈ LATÊNCIA: ${lat}ms ◈ TOKENS: ${document.getElementById('um-total')?.textContent||'0'} ◈`; let el = document.getElementById('ticker-txt'); if(el) el.textContent = txt + '  ' + txt; }
+
+    // ==================== API WRAPPER ====================
+    async function api(method, path, body, tok) {
+        let url = API + path;
+        let headers = { 'Content-Type': 'application/json' };
+        if (tok) headers['Authorization'] = 'Bearer ' + tok;
+        let t0 = Date.now();
+        let res = await fetch(url, { method, headers, body: body ? JSON.stringify(body) : undefined, signal: AbortSignal.timeout(12000) });
+        let ms = Date.now() - t0;
+        let data;
+        try { data = await res.json(); } catch { data = { _raw: res.statusText }; }
+        return { data, ms, status: res.status, ok: res.ok };
+    }
+
+    // ==================== HEALTH ====================
+    async function doHealth() {
+        checks++;
+        document.getElementById('sm-checks') && (document.getElementById('sm-checks').textContent = checks);
+        document.getElementById('sc-checks') && (document.getElementById('sc-checks').textContent = checks);
+        let pill = document.getElementById('hp'); if(pill) pill.className = 'spill wait';
+        let htext = document.getElementById('htext'); if(htext) htext.textContent = '…';
+        try {
+            let t0 = Date.now();
+            let res = await fetch(API + '/health', { signal: AbortSignal.timeout(8000) });
+            let ms = Date.now() - t0;
+            if(res.ok) {
+                oks++; consErrs=0;
+                if(pill) pill.className = 'spill on';
+                if(htext) htext.textContent = 'Online';
+                let dmSrv = document.getElementById('dm-srv'); if(dmSrv) { dmSrv.textContent = 'ONLINE'; dmSrv.className = 'mv g'; }
+                let dmLat = document.getElementById('dm-lat'); if(dmLat) dmLat.textContent = ms;
+                let smHealth = document.getElementById('sm-health'); if(smHealth) { smHealth.textContent = 'OK'; smHealth.style.color = 'var(--success)'; }
+                let smErrs = document.getElementById('sm-errs'); if(smErrs) smErrs.textContent = 0;
+                latencies.push(ms); if(latencies.length>30) latencies.shift();
+                let avg = Math.round(latencies.reduce((a,b)=>a+b,0)/latencies.length);
+                let smAvg = document.getElementById('sm-avg'); if(smAvg) smAvg.textContent = avg;
+                addLog('tok', `Health OK — ${ms}ms`);
+                addRtLog('tok', `Server OK ${ms}ms`);
+            } else throw new Error('HTTP '+res.status);
+        } catch(e) {
+            errs++; consErrs++;
+            if(pill) pill.className = 'spill off';
+            if(htext) htext.textContent = 'Offline';
+            let dmSrv = document.getElementById('dm-srv'); if(dmSrv) { dmSrv.textContent = 'OFFLINE'; dmSrv.className = 'mv r'; }
+            let smHealth = document.getElementById('sm-health'); if(smHealth) { smHealth.textContent = 'ERRO'; smHealth.style.color = 'var(--danger)'; }
+            let smErrs = document.getElementById('sm-errs'); if(smErrs) smErrs.textContent = consErrs;
+            addLog('ter', 'Health FAILED: '+e.message);
+            addRtLog('ter', 'Health FAIL: '+e.message);
+        }
+        document.getElementById('sc-ok') && (document.getElementById('sc-ok').textContent = oks);
+        document.getElementById('sc-err') && (document.getElementById('sc-err').textContent = errs);
+    }
+
+    async function pingAll() { addLog('tin','Ping completo…'); await doHealth(); await loadModes(); if(SESSION_TOK) await loadConn(); addLog('tok','Ping OK'); }
+    async function forceRefresh() { await pingAll(); renderUsers(); renderTokensList(); renderNotifs(); }
+
+    // ==================== MODOS ====================
+    async function loadModes() {
+        try {
+            let r = await api('GET', '/api/trading-modes');
+            if(r.ok && r.data.modes) {
+                document.getElementById('dm-users') && (document.getElementById('dm-users').textContent = document.getElementById('um-total')?.textContent||'0');
+                let out = document.getElementById('modes-out');
+                if(out) out.innerHTML = `<div style="display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(140px,1fr))">${r.data.modes.map((m,i)=>`<div style="background:rgba(0,0,0,0.3);border:1px solid var(--border-light);border-radius:12px;padding:12px"><div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:3px">${m.name}</div><div style="font-size:9px;color:var(--text-muted)">${m.description}</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:8px">${m.timeframes.map(t=>`<span style="font-size:9px;padding:2px 6px;background:rgba(0,0,0,0.3);border-radius:4px">${t}</span>`).join('')}</div></div>`).join('')}</div>`;
+                addLog('tok','Modos carregados');
+            }
+        } catch(e) { addLog('ter','loadModes: '+e.message); }
+    }
+
+    // ==================== CONEXÃO DERIV ====================
+    async function loadConn() {
+        let tok = SESSION_TOK || document.getElementById('cfg-sess')?.value.trim();
+        if(!tok) { let el = document.getElementById('conn-out'); if(el) el.innerHTML = '<div class="empty">Token necessário</div>'; return; }
+        try {
+            let r = await api('GET', '/api/connection-status', null, tok);
+            let el = document.getElementById('conn-out');
+            if(el) {
+                if(r.ok) {
+                    let st = r.data.status || '—';
+                    el.innerHTML = `<div><span class="badge ${st==='connected'?'g':'a'}">${st}</span> <span class="badge x">${r.ms}ms</span></div><pre style="font-size:10px;margin-top:8px">${JSON.stringify(r.data,null,2)}</pre>`;
+                } else el.innerHTML = `<span class="badge r">Erro ${r.status}</span>`;
+            }
+        } catch(e) { addLog('ter','loadConn: '+e.message); }
+    }
+
+    // ==================== TOKENS (BACKEND KV) ====================
+    async function genToken() {
+        let key = document.getElementById('gk')?.value.trim() || ADMIN_KEY;
+        let period = parseInt(document.getElementById('gp')?.value || '30');
+        let userId = document.getElementById('gid')?.value.trim() || undefined;
+        if(!key) { showRes('gen-res','r','Chave admin necessária'); return; }
+        let btn = document.getElementById('gbtn'); if(btn) { btn.disabled=true; btn.innerHTML='<span class="spin">◌</span>'; }
+        try {
+            let r = await api('POST', '/api/admin/generate-token', { adminKey: key, periodDays: period, userId });
+            if(btn) { btn.disabled=false; btn.innerHTML='◈ Gerar Token'; }
+            if(r.ok && r.data.token) {
+                let tk = r.data.token, uid = r.data.userId;
+                let exp = new Date(r.data.expiresAt).toLocaleDateString();
+                let resDiv = document.getElementById('gen-res');
+                if(resDiv) resDiv.innerHTML = `<div class="tbox">${tk}<button class="tcopy" onclick="copyTxt('${tk}',this)">Copiar</button></div><div style="margin-top:8px"><button class="btn btn-sm btn-o" onclick="useAsSess('${tk}')">→ Sessão</button></div>`;
+                addLog('tok', `Token gerado: ${period}d`);
+                addRtLog('tok', `Token gerado ${period}d`);
+                renderUsers();
+                renderTokensList();
+            } else showRes('gen-res','r', r.data?.error || 'Erro');
+        } catch(e) { if(btn) { btn.disabled=false; btn.innerHTML='◈ Gerar Token'; } showRes('gen-res','r', e.message); addLog('ter','genToken: '+e.message); }
+    }
+
+    async function renderUsers() {
+        let adminKey = ADMIN_KEY || document.getElementById('cfg-admin')?.value.trim();
+        if(!adminKey) { console.warn("Admin key não configurada"); return; }
+        try {
+            let res = await fetch(API + '/api/admin/list-tokens', {
+                headers: { 'Authorization': `Bearer ${adminKey}` }
+            });
+            let data = await res.json();
+            let tokens = data.tokens || [];
+            let tbody = document.getElementById('users-tbody');
+            if(!tbody) return;
+            let total = tokens.length;
+            let now = Date.now();
+            let active = tokens.filter(t => t.expiresAt > now && t.isActive !== false).length;
+            document.getElementById('um-total') && (document.getElementById('um-total').textContent = total);
+            document.getElementById('um-active') && (document.getElementById('um-active').textContent = active);
+            document.getElementById('um-exp') && (document.getElementById('um-exp').textContent = total-active);
+            document.getElementById('um-sess') && (document.getElementById('um-sess').textContent = totalQueries);
+            document.getElementById('dm-users') && (document.getElementById('dm-users').textContent = total);
+            document.getElementById('dnav-users') && (document.getElementById('dnav-users').textContent = total);
+            if(!total) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">Nenhum utilizador</td></tr>'; return; }
+            tbody.innerHTML = tokens.map((t,i) => {
+                let exp = new Date(t.expiresAt);
+                let expired = exp < new Date();
+                let uid = t.userId?.substring(0,10) || '—';
+                return `<tr><td>${uid}${t.label?` <span class="badge b">${t.label}</span>`:''}</td><td>${t.periodDays}d</td><td style="color:${expired?'var(--danger)':'var(--text-secondary)'}">${exp.toLocaleDateString()}</td><td><span class="badge ${expired?'r':'g'}">${expired?'expirado':'ativo'}</span></td><td><button class="btn btn-sm btn-o" onclick="copyTxt('${t.token}',this)">Copiar</button><button class="btn btn-sm btn-r" onclick="delToken('${t.token}')">✕</button></td></tr>`;
+            }).join('');
+        } catch(e) { addLog('ter','renderUsers: '+e.message); }
+    }
+
+    async function renderTokensList() {
+        let adminKey = ADMIN_KEY || document.getElementById('cfg-admin')?.value.trim();
+        if(!adminKey) { let el = document.getElementById('tokens-list'); if(el) el.innerHTML = '<div class="empty">Admin key não configurada</div>'; return; }
+        try {
+            let res = await fetch(API + '/api/admin/list-tokens', {
+                headers: { 'Authorization': `Bearer ${adminKey}` }
+            });
+            let data = await res.json();
+            let tokens = data.tokens || [];
+            let el = document.getElementById('tokens-list');
+            if(!el) return;
+            if(tokens.length === 0) { el.innerHTML = '<div class="empty">Nenhum token gerado</div>'; return; }
+            el.innerHTML = tokens.map(t => {
+                let exp = new Date(t.expiresAt);
+                let expired = exp < new Date();
+                return `<div style="background:rgba(0,0,0,0.3);border:1px solid var(--border-light);border-radius:8px;padding:10px;margin-bottom:6px">
+                    <div style="display:flex;gap:5px;margin-bottom:5px">
+                        <span class="badge ${expired?'r':'g'}">${expired?'expirado':'válido'}</span>
+                        <span class="badge x">${t.periodDays}d</span>
+                        <span class="badge b">${t.userId?.substring(0,8)||'—'}</span>
+                        <span style="margin-left:auto;font-size:9px">exp: ${exp.toLocaleDateString()}</span>
+                    </div>
+                    <div style="font-size:9px;word-break:break-all">${t.token.substring(0,48)}…</div>
+                    <div style="margin-top:6px"><button class="btn btn-sm btn-o" onclick="copyTxt('${t.token}',this)">Copiar</button><button class="btn btn-sm btn-o" onclick="useAsSess('${t.token}')">Sessão</button><button class="btn btn-sm btn-r" onclick="delToken('${t.token}')">✕</button></div>
+                </div>`;
+            }).join('');
+        } catch(e) { addLog('ter','renderTokensList: '+e.message); }
+    }
+
+    async function delToken(tokenToDelete) {
+        let adminKey = ADMIN_KEY || document.getElementById('cfg-admin')?.value.trim();
+        if(!adminKey) return;
+        try {
+            let res = await api('POST', '/api/admin/delete-token', { adminKey, tokenToDelete });
+            if(res.ok) {
+                addLog('tok', 'Token removido');
+                renderUsers();
+                renderTokensList();
+            } else addLog('ter', 'Falha ao remover token');
+        } catch(e) { addLog('ter','delToken: '+e.message); }
+    }
+
+    function useAsSess(tok) { SESSION_TOK = tok; localStorage.setItem('session_tok', tok); let sess = document.getElementById('cfg-sess'); if(sess) sess.value = tok; let an = document.getElementById('an-tok'); if(an) an.value = tok; addLog('tok','Sessão atualizada'); }
+
+    async function valToken() {
+        let tok = document.getElementById('val-tok')?.value.trim();
+        if(!tok) { showRes('val-res','r','Cole um token'); return; }
+        showRes('val-res','x','<span class="spin">◌</span> Validando…');
+        try {
+            let r = await api('POST', '/api/validate-token', { token: tok });
+            if(r.ok && r.data.valid) {
+                let exp = r.data.expiresAt ? new Date(r.data.expiresAt*1000).toLocaleDateString() : '—';
+                showRes('val-res','g', `✓ VÁLIDO · ${r.data.periodDays}d · expira ${exp}`);
+                addLog('tok','Token validado OK');
+            } else showRes('val-res','r', '✕ INVÁLIDO');
+        } catch(e) { showRes('val-res','r', e.message); addLog('ter','valToken: '+e.message); }
+    }
+
+    // ==================== NOTIFICAÇÕES ====================
+    function sendNotif() {
+        let type = getPill('ntype'), dest = getPill('ndest'), prio = getPill('nprio');
+        let title = document.getElementById('ntitle')?.value.trim();
+        let body = document.getElementById('nbody')?.value.trim();
+        if(!title) { showRes('notif-send-res','r','Título obrigatório'); return; }
+        let n = { type, dest, prio, title, body, ts: new Date().toISOString() };
+        notifications.unshift(n);
+        if(notifications.length>100) notifications.pop();
+        localStorage.setItem('notifs', JSON.stringify(notifications));
+        renderNotifs();
+        document.getElementById('ntitle').value = '';
+        document.getElementById('nbody').value = '';
+        showRes('notif-send-res','g','✓ Notificação enviada');
+        addLog('tok', `Notif: ${title}`);
+        addRtLog('tin', `NOTIF: ${title}`);
+    }
+
+    function renderNotifs() {
+        let el = document.getElementById('notif-hist');
+        if(!el) return;
+        document.getElementById('dnav-notif') && (document.getElementById('dnav-notif').textContent = notifications.length);
+        if(!notifications.length) { el.innerHTML = '<div class="empty">Nenhuma notificação</div>'; return; }
+        let icons = { info:'ℹ', alerta:'⚠', sinal:'◈', manutencao:'⬙', critico:'🚨' };
+        el.innerHTML = notifications.slice(0,30).map(n => `<div class="ni"><div class="ni-ico" style="color:var(--accent)">${icons[n.type]||'ℹ'}</div><div><div class="ni-title">${esc(n.title)}</div>${n.body?`<div class="ni-body">${esc(n.body)}</div>`:''}<div class="ni-ts">${new Date(n.ts).toLocaleString()} · ${n.dest}</div></div></div>`).join('');
+    }
+    function clearNotifs() { notifications = []; localStorage.removeItem('notifs'); renderNotifs(); }
+
+    // ==================== ANÁLISE ====================
+    async function doAnalyze() {
+        let tok = document.getElementById('an-tok')?.value.trim() || SESSION_TOK;
+        let sym = document.getElementById('an-sym')?.value;
+        let mode = document.getElementById('an-mode')?.value;
+        if(!tok) { alert('Token necessário'); return; }
+        let btn = document.getElementById('an-btn'); if(btn) { btn.disabled=true; btn.innerHTML='<span class="spin">◌</span> Analisando…'; }
+        let resCard = document.getElementById('an-res-card'); if(resCard) resCard.style.display = 'block';
+        let resDiv = document.getElementById('an-res'); if(resDiv) resDiv.innerHTML = '<div class="empty">A processar…</div>';
+        addLog('tin', `Análise: ${sym}/${mode}`);
+        totalQueries++;
+        try {
+            let r = await api('POST', '/api/analyze', { symbol: sym, mode }, tok);
+            if(btn) { btn.disabled=false; btn.innerHTML='◉ Executar Análise'; }
+            if(r.ok && r.data.success) {
+                let sig = r.data.consolidated?.signal || 'HOLD';
+                let conf = ((r.data.consolidated?.confidence||0)*100).toFixed(1);
+                let clr = sig==='CALL'?'var(--success)':sig==='PUT'?'var(--danger)':'var(--warning)';
+                if(resDiv) resDiv.innerHTML = `<div style="text-align:center;font-size:32px;font-weight:700;color:${clr}">${sig}</div><div>Confiança: ${conf}%</div><div>Preço: ${r.data.consolidated?.price||0}</div><pre style="font-size:10px;margin-top:8px">${JSON.stringify(r.data,null,2)}</pre>`;
+                addLog('tok', `${sym}/${mode}: ${sig} (${conf}%)`);
+                addRtLog('tok', `${sym} ${sig}`);
+            } else if(resDiv) resDiv.innerHTML = `<span class="badge r">Erro ${r.status}</span><pre>${JSON.stringify(r.data,null,2)}</pre>`;
+        } catch(e) { if(btn) { btn.disabled=false; btn.innerHTML='◉ Executar Análise'; } if(resDiv) resDiv.innerHTML = `<span class="badge r">Erro: ${e.message}</span>`; addLog('ter','doAnalyze: '+e.message); }
+    }
+
+    // ==================== SERVER / RENDER ====================
+    async function restartRenderService() {
+        let adminKey = ADMIN_KEY || document.getElementById('cfg-admin')?.value.trim();
+        if(!adminKey) { showRes('renderRestartRes','r','Chave admin necessária'); return; }
+        let btn = document.getElementById('renderRestartBtn');
+        if(btn) { btn.disabled=true; btn.innerHTML='<span class="spin">◌</span> Reiniciando…'; }
+        showRes('renderRestartRes','a','⏳ Enviando…');
+        try {
+            let r = await api('POST', '/api/admin/restart-render', { adminKey });
+            if(r.ok && r.data.success) showRes('renderRestartRes','g',`✓ ${r.data.message}`);
+            else showRes('renderRestartRes','r', `✕ ${r.data.error||'Falha'}`);
+        } catch(e) { showRes('renderRestartRes','r', e.message); }
+        if(btn) { btn.disabled=false; btn.innerHTML='⬙ Reiniciar Serviço'; }
+    }
+
+    // ==================== CONFIGURAÇÕES ====================
+    function saveURL() {
+        let newUrl = document.getElementById('cfg-url')?.value.trim();
+        if(newUrl) { API = newUrl; localStorage.setItem('api_url', API); applyStored(); addLog('tok','URL atualizada'); doHealth(); }
+    }
+    function saveCreds() {
+        let ak = document.getElementById('cfg-admin')?.value.trim();
+        let st = document.getElementById('cfg-sess')?.value.trim();
+        if(ak) { ADMIN_KEY = ak; localStorage.setItem('admin_key', ak); }
+        if(st) { SESSION_TOK = st; localStorage.setItem('session_tok', st); let an = document.getElementById('an-tok'); if(an) an.value = st; }
+        addLog('tok','Credenciais guardadas');
+        if(SESSION_TOK) validateSessionTok();
+        renderUsers();
+        renderTokensList();
+    }
+    function clearCreds() {
+        ADMIN_KEY = ''; SESSION_TOK = '';
+        localStorage.removeItem('admin_key'); localStorage.removeItem('session_tok');
+        let cfgAdmin = document.getElementById('cfg-admin'); if(cfgAdmin) cfgAdmin.value = '';
+        let cfgSess = document.getElementById('cfg-sess'); if(cfgSess) cfgSess.value = '';
+        let anTok = document.getElementById('an-tok'); if(anTok) anTok.value = '';
+        addLog('twn','Credenciais removidas');
+    }
+    async function validateSessionTok() {
+        let el = document.getElementById('cfg-tok-info');
+        if(!el) return;
+        el.innerHTML = '<span class="spin">◌</span>';
+        try {
+            let r = await api('POST', '/api/validate-token', { token: SESSION_TOK });
+            if(r.ok && r.data.valid) el.innerHTML = `<span class="badge g">✓ Válido · ${r.data.periodDays}d</span>`;
+            else el.innerHTML = `<span class="badge r">✕ Inválido</span>`;
+        } catch { el.innerHTML = `<span class="badge a">Erro</span>`; }
+    }
+
+    function applyStored() {
+        let urlField = document.getElementById('cfg-url'); if(urlField) urlField.value = API;
+        let urlDisp = document.getElementById('urldisp'); if(urlDisp) urlDisp.textContent = API.replace('https://','');
+        let srvUrl = document.getElementById('srv-url-disp'); if(srvUrl) srvUrl.textContent = API;
+        let aboutUrl = document.getElementById('about-url'); if(aboutUrl) aboutUrl.textContent = API;
+    }
+
+    // ==================== NAVEGAÇÃO ====================
+    function go(p) {
+        document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+        document.querySelectorAll('.ditem').forEach(x=>x.classList.remove('active'));
+        let page = document.getElementById('page-'+p);
+        if(page) page.classList.add('active');
+        let item = document.querySelector(`[data-p="${p}"]`);
+        if(item) item.classList.add('active');
+        closeDrawer();
+        if(p === 'tokens') renderTokensList();
+        if(p === 'users') renderUsers();
+    }
+    function toggleDrawer() {
+        let d = document.getElementById('drawer'); let o = document.getElementById('overlay'); let h = document.getElementById('ham');
+        if(d && o && h) {
+            let show = !d.classList.contains('show');
+            d.classList.toggle('show', show);
+            o.classList.toggle('show', show);
+            h.classList.toggle('open', show);
+        }
+    }
+    function closeDrawer() {
+        let d = document.getElementById('drawer'); let o = document.getElementById('overlay'); let h = document.getElementById('ham');
+        if(d) d.classList.remove('show');
+        if(o) o.classList.remove('show');
+        if(h) h.classList.remove('open');
+    }
+
+    // ==================== LOGIN E INICIALIZAÇÃO ====================
+    async function verifyAdminToken(token) {
+        try {
+            let res = await fetch(API + '/api/verify-token', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token })
+            });
+            let data = await res.json();
+            return data.valid === true;
+        } catch(e) {
+            console.warn("Falha na verificação, usando fallback local (admin123)");
+            return token === "admin123";
+        }
+    }
+
+    document.getElementById('validationForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        let tokenInput = document.getElementById('tokenCode').value.trim();
+        let msgDiv = document.getElementById('login-message');
+        let btn = document.getElementById('submitBtn');
+        if(!tokenInput) { msgDiv.className = 'message error'; msgDiv.innerText = 'Insira o token'; return; }
+        msgDiv.className = 'message loading'; msgDiv.innerText = 'Validando...'; btn.disabled = true;
+        let isValid = await verifyAdminToken(tokenInput);
+        if(isValid) {
+            msgDiv.className = 'message success'; msgDiv.innerText = 'Acesso liberado!';
+            setTimeout(() => {
+                document.getElementById('login-wrapper').classList.remove('active');
+                document.getElementById('dashboard-wrapper').classList.add('active');
+                iniciarPainel();
+            }, 800);
+        } else {
+            msgDiv.className = 'message error'; msgDiv.innerText = 'Token inválido';
+            btn.disabled = false;
+        }
+    });
+
+    function iniciarPainel() {
+        applyStored();
+        doHealth();
+        loadModes();
+        renderUsers();
+        renderTokensList();
+        renderNotifs();
+        setInterval(updateUptime, 1000);
+        setInterval(updateTicker, 5000);
+        setInterval(() => { let clock = document.getElementById('liveClock'); if(clock) clock.innerText = new Date().toLocaleTimeString('pt-PT'); }, 1000);
+        if(SESSION_TOK) { let anTok = document.getElementById('an-tok'); if(anTok) anTok.value = SESSION_TOK; let cfgSess = document.getElementById('cfg-sess'); if(cfgSess) cfgSess.value = SESSION_TOK; validateSessionTok(); }
+        if(ADMIN_KEY) { let cfgAdmin = document.getElementById('cfg-admin'); if(cfgAdmin) cfgAdmin.value = ADMIN_KEY; }
+        setupPills('ntype'); setupPills('ndest'); setupPills('nprio');
+        setupPills('log-filter', () => renderLogs());
+        document.getElementById('sc-int') && (document.getElementById('sc-int').textContent = 'Manual');
+        addLog('tin', 'Painel iniciado com sucesso');
+    }
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            let logo = document.getElementById('logo-screen');
+            if(logo) { logo.style.opacity = '0'; setTimeout(() => { logo.style.display = 'none'; let splash = document.getElementById('splash-screen'); if(splash) splash.style.opacity = '1'; setTimeout(() => { if(splash) splash.style.opacity = '0'; setTimeout(() => { if(splash) splash.style.display = 'none'; let login = document.getElementById('login-wrapper'); if(login) login.classList.add('active'); }, 800); }, 2800); }, 1000); }
+        }, 8000);
+    });
+</script>
+</body>
+</html>
